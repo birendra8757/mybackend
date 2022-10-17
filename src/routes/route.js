@@ -34,10 +34,79 @@ router.get('/students/:studentName', function(req, res){
 // Example 2 for path params
 router.get('/student-details/:name', function(req, res){
     let requestParams = req.params
-    console.log("This is the request ", requestParams)
+    console.log("This is the request params ", requestParams)
     let studentName = requestParams.name
     console.log('Name of the student is ', studentName)
     res.send('Dummy response')
 })
+let movies = ['Indian','Damini','Junglee','Gadar','Nayak']
+// solution 01
+router.get('/movies',function(req,res){
+   
+    
+    console.log("the popular movie "+ movies)
+    res.send(movies);
+})
+// solution 02
+
+// router.get('/movies/:indexNumber',function(req,res){
+    
+   
+//     let indexNumber = req.params.indexNumber
+//     res.send(movies[indexNumber])
+    
+// })
+//solution 03
+
+router.get('/movies/:indexNumber',function(req,res){
+    let indexNumber = req.params.indexNumber
+    if(indexNumber>=movies.length){
+        res.send("plese enter valid index number")
+    }else{
+        res.send(movies[indexNumber])  
+    }
+})
+// solution 04
+let films = [ {
+    id: 1,
+    name: 'The Shining'
+   }, {
+    id: 2,
+    name:' Incendies'
+   }, {
+    id: 3,
+    name: 'Rang de Basanti'
+   }, {
+    id: 4,
+    name: 'Finding Nemo'
+   }]
+   router.get('/films',function(req,res){
+    console.log("those films are"+films)
+    res.send(films);
+   })
+// //solution 05
+router.get('/films/:filmId',function(req,res){
+   let films = [ {
+    id: 1,
+    name: 'The Shining'
+   }, {
+    id: 2,
+    name:' Incendies'
+   }, {
+    id: 3,
+    name: 'Rang de Basanti'
+   }, {
+    id: 4,
+    name: 'Finding Nemo'
+   }]
+   let index = req.params.filmId;
+   if (index >= films.length){
+    return res.send("No movie exists with this id")
+    
+   }else{
+    res.send(films[index])
+   }
+})
+   
 
 module.exports = router;
