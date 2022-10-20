@@ -159,5 +159,66 @@ router.post( "/post-query-2", function (req, res){
     res.send( {data: finalArr , status: true})
 })
 
+//**************solution************
+let persons= [
+    {
+    name: "PK",
+    age: 10,
+    votingStatus: false
+    },
+    {
+    name: "SK",
+    age: 20,
+    votingStatus: false
+    },
+    {
+    name: "AA",
+    age: 70,
+    votingStatus: false
+    },
+    {
+    name: "SC",
+    age: 5,
+    votingStatus: false
+    },
+    {
+    name: "HO",
+    age: 40,
+    votingStatus: false
+    }
+]
+// router.post('/solution1',function(req,res){
+//     let input = req.query.age
+//     let final = persons.filter(a=>a.age>=input);
+//     let final1 = final.map(x=>x.votingStatus=true);
+//     let final2 = persons;
+//     res.send({final1});
+    
+//     // req.send({final})
+//     console.log(final1)
+// }
+// )
+
+router.post('/person',function(req,res){
+    const validAge=req.query.validAge;
+    const updatedPersons = []
+
+    persons.forEach((person)=>{
+        if(person.age > validAge){
+        person.votingStatus=true;
+        updatedPersons.push(person)
+        }
+        console.log(updatedPersons)
+    })
+    
+    
+    return res.send({updatedPersons:updatedPersons})
+    
+
+})
+    
+
+
+
 
 module.exports = router;
