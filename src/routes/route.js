@@ -101,28 +101,28 @@ let players =
 ],
 },
 ]
-// router.post('/players', function (req, res) {
-//     let NewPlayer=req.body;
-//         players.push(NewPlayer);
-// //LOGIC WILL COME HERE
-// res.send( { data: players , status: true } )
-// console.log(players);
-// })
-// router.post('/players',function(req,res){
-//     const body = req.body
+router.post('/players', function (req, res) {
+    const body = req.body;
+
+    const playerDetails = players.find(player => player.name ===body.name);
+
+    if(playerDetails){
+        return res.send({massage:"player already exist"})
+
+    }else{
+        players.push(body)
+        return res.send(players)
+        console.log(players)
+        
+    }
     
 // //player name should be unique ,this name should not exist in the playes araay
 //     const playerDetails = players.find(player=>player.name===body.name)
 //     //when there is not match found then find will return undefind
 
-//     if(playerDetails){
-//         return res.send({massage:"player details already exist"})
-//     }else{
-//         players.push(body)
-//         res.send(players);   
-//     }
-    
-// })
+
+})
+
 
 
 
