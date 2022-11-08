@@ -8,8 +8,9 @@ try{
   //the second parameter is always the response
   let data = req.body;
   let savedData = await userModel.create(data);
-  res.send({ msg: savedData });
-}catch(e){res.send(e)}
+  // console.log(req.newAtribute);
+  res.status(201).send({ msg: savedData });
+}catch(error){res.status(500).send({error:error.message})}
 }
 
 
@@ -20,9 +21,9 @@ const loginUser = async function (req, res) {
 
   let user = await userModel.findOne({ emailId: userName, password: password });
   if (!user)
-    return res.send({
+    return res.status(404).send({
       status: false,
-      msg: "username or the password is not corerct",
+      msg: "username or the password is not correct",
     });
 
   let token = jwt.sign(
@@ -34,29 +35,46 @@ const loginUser = async function (req, res) {
     "functionup-lithium"
   );
   res.setHeader("x-auth-token", token);
-  res.send({ status: true, data: token });
-  }catch(err){res.send(err)}
+  res.status(201).send({ status: true, data: token });
+  }catch(err){res.status(500).send({err:err.message})}
 };
 
 
 const getUserData = async function (req, res) {
+   try{
    let userId = req.params.userId;
     let userDetails = await userModel.findById(userId);
-  if (!userDetails)
-    return res.send({ status: false, msg: "No such user exists" });
-  res.send({ status: true, data: userDetails });  
+  res.status(200).send({ status: true, data: userDetails });  
+  }catch(err){
+    res.status(500).send({err:err.message})
+  }
 };
 
 const updateUser = async function (req, res) {
-
+try{
   let userId = req.params.userId;
-  //Return an error if no user with the given id exists in the db
   let userData = req.body;
   let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData,{new:true});
-  res.send({ status: updatedUser, data: updatedUser });
+  res.status(201).send({ status: updatedUser, data: updatedUser });
+}catch(e){
+  res.status(500).send({e:e.message})
+}
 };
 
+
+
+const deleteUser =async (req,res)=>{
+  try{
+  let userId = req.params.userId;
+  let updatedUser = await userModel.findOneAndUpdate({ _id: userId },{isDeleted:true},{new:true});
+  res.status(201).send({status:true,data:updatedUser})
+  }catch(error){
+    res.status(500).send({error:error.message})
+  }
+}
+
 const postMessage = async function (req, res) {
+  try{
     let message = req.body.message
     // Check if the token is present
     // Check if the token present is a valid token
@@ -65,7 +83,7 @@ const postMessage = async function (req, res) {
     if(!token) return res.send({status: false, msg: "token must be present in the request header"})
     let decodedToken = jwt.verify(token, 'functionup-lithium')
 
-    if(!decodedToken) return res.send({status: false, msg:"token is not valid"})
+    if(!decodedToken) return res.status(500).send({status: false, msg:"token is not valid"})
     
     //userId for which the request is made. In this case message to be posted.
     let userToBeModified = req.params.userId
@@ -76,7 +94,7 @@ const postMessage = async function (req, res) {
     if(userToBeModified != userLoggedIn) return res.send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
 
     let user = await userModel.findById(req.params.userId)
-    if(!user) return res.send({status: false, msg: 'No such user exists'})
+    if(!user) return res.status(404).send({status: false, msg: 'No such user exists'})
     
     let updatedPosts = user.posts
     //add the message to user's posts
@@ -84,14 +102,12 @@ const postMessage = async function (req, res) {
     let updatedUser = await userModel.findOneAndUpdate({_id: user._id},{posts: updatedPosts}, {new: true})
 
     //return the updated user document
-    return res.send({status: true, data: updatedUser})
-}
+    return res.status(201).send({status: true, data: updatedUser})
+  }catch(err){
+    res.status(500).send({err:err.message})
+  }
+  }
 
-const deleteUser =async (req,res)=>{
-  let userId = req.params.userId;
-  let updatedUser = await userModel.findOneAndUpdate({ _id: userId },{isDeleted:true},{new:true});
-  res.send({status:true,data:updatedUser})
-}
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
