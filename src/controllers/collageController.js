@@ -7,8 +7,6 @@ let regexlogoLink = /^https?:\/\/.*\/.*\.(png|gif|webp|jpeg|jpg)\??.*$/gim;
 
 
 
-
-
 // ==============================================createcollege==================================================
 const createcollege = async function (req, res) {
   res.setHeader('Access-Control-Allow-Origin','*')
