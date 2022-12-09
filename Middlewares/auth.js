@@ -10,7 +10,7 @@ const authenticate = function (req, res, next) {
     try {
         const token = req.headers["x-api-key"]
         if (!token) {
-            return res.status(401).send({ status: false, msg: "Token must be present" });
+            return res.status(400).send({ status: false, msg: "Token must be present" });
         }
         const decodedToken = jwt.verify(token, "project1-room14-key");
         req.decodedToken = decodedToken

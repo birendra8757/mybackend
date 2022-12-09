@@ -54,9 +54,9 @@ const createBlog = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Category should be type String" });
     }
 
-    if (typeof (tags && subcategory) !== "object") {
-      return res.status(400).send({ status: false, msg: "tags/subCategory should be in Array of String only" });
-    }
+    // if (typeof (tags && subcategory) !== "object") {
+    //   return res.status(400).send({ status: false, msg: "tags/subCategory should be in Array of String only" });
+    // }
 
     let authId = await authorModel.findById(data.authorId)
 
@@ -86,11 +86,7 @@ const getBlog = async function (req, res) {
         return res.status(400).send({ msg: "Category should be type String" });
       }
     }
-    if (tags || subcategory) {
-      if (typeof (tags || subcategory) !== "object") {
-        return res.status(400).send({ status: false, msg: "tags/subCategory should be in Array of String only" });
-      }
-    }
+    
     if (authorId) {
       if (!mongoose.Types.ObjectId.isValid(authorId)) { return res.status(400).send({ status: false, msg: "! Oops authorId is not valid" }) }
     }
@@ -165,7 +161,7 @@ const deleteBlogByPathParam = async function (req, res) {
     }
 
     let deleteBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
-    res.status(200).send({ status: true, msg: "Blog is sucessfully deleted" })
+    return res.status(200).send({ status: true, msg: "Blog is sucessfully deleted" })
   }
   catch (err) {
     return res.status(500).send({ status: false, msg: err.message })
@@ -183,12 +179,12 @@ const deleteByQuery = async function (req, res) {
     if (Object.keys(query).length == 0) {
       return res.status(400).send({ status: false, msg: "input is required" });
     }
-    // console.log(query)
+    
 
     let token = req.decodedToken;
     let blogDetails = await blogModel.findOne({ $and: [{ isDeleted: false, isPublished: false }, query] 
     })
-    console.log(blogDetails)
+    
 
     if (!blogDetails) {
       return res.status(404).send({ status: false, message: `Blog not exist or already deletedd` });

@@ -1,6 +1,6 @@
 const authorModel = require("../Models/authorModel")
 const jwt = require("jsonwebtoken");
-const stringvalid =/[^(A-Z)]+[a-z]+(?:(?:|['_\. ])([a-z]*(\.\D)?[a-z])+)*$/
+
 
 
 function stringVerify(value) {
@@ -70,7 +70,7 @@ const createAuthor = async function (req, res) {
          return  res.status(201).send({ status:true , data: authordata });
     }
     catch (err) {
-        res.status(500).send({ error: err.message, status: false });
+       return  res.status(500).send({ error: err.message, status: false });
     }
 }
 
